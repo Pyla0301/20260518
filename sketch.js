@@ -27,7 +27,7 @@ function draw() {
   // 計算全螢幕的 50% 寬高
   let drawWidth = windowWidth * 0.5;
   let drawHeight = windowHeight * 0.5;
-  ``
+  
   push();
   translate(windowWidth / 2, windowHeight / 2); // 將原點移至畫布中心
   scale(-1, 1); // X 軸縮放 -1，達成左右顛倒（鏡像）
@@ -38,6 +38,24 @@ function draw() {
   drawHands(drawWidth, drawHeight);
   
   pop();
+
+  // 在畫布上方顯示放大的手勢文字
+  let mainGesture = "";
+  for (let i = 0; i < hands.length; i++) {
+    let g = detectGesture(hands[i].keypoints);
+    if (g !== '未知') {
+      mainGesture = g;
+      break; // 若有多隻手，優先顯示第一隻有明確手勢的結果
+    }
+  }
+
+  if (mainGesture !== "") {
+    fill(255);
+    noStroke();
+    textSize(100);
+    textAlign(CENTER, CENTER);
+    text(mainGesture, windowWidth / 2, windowHeight * 0.15); // 顯示在畫布上半部中心
+  }
 }
 
 function drawHands(drawWidth, drawHeight) {
