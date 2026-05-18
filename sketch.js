@@ -65,15 +65,34 @@ function drawHands(drawWidth, drawHeight) {
     let wristX = (wrist.x / video.width) * drawWidth - (drawWidth / 2);
     let wristY = (wrist.y / video.height) * drawHeight - (drawHeight / 2);
     
+    // 辨識剪刀、石頭、布
+    let gesture = detectGesture(hand.keypoints);
+    
     push();
     translate(wristX, wristY);
     scale(-1, 1); // 因為外部畫布做過鏡像，這裡要把文字翻轉回來，才不會變成反字
     fill(255, 255, 0);
     textSize(24);
     textAlign(CENTER, BOTTOM);
-    text(hand.handedness, 0, -20); // 顯示 'Left' 或 'Right'
+    text(hand.handedness + ' - ' + gesture, 0, -20); // 顯示左右手標籤與手勢結果
     pop();
   }
+}
+
+function detectGesture(keypoints) {
+  let wrist = keypoints[0];
+  
+  // 判斷各手指是否伸直 (指尖到手腕距離 > 關節到手腕距離)
+  let isIndexOpen = dist(wrist.x, wrist.y, keypoints[8].x, keypoints[8].y) > dist(wrist.x, wrist.y, keypoints[6].x, keypoints[6].y);
+  let isMiddleOpen = dist(wrist.x, wrist.y, keypoints[12].x, keypoints[12].y) > dist(wrist.x, wrist.y, keypoints[10].x, keypoints[10].y);
+  let isRingOpen = dist(wrist.x, wrist.y, keypoints[16].x, keypoints[16].y) > dist(wrist.x, wrist.y, keypoints[14].x, keypoints[14].y);
+  let isPinkyOpen = dist(wrist.x, wrist.y, keypoints[20].x, keypoints[20].y) > dist(wrist.x, wrist.y, keypoints[18].x, keypoints[18].y);
+
+  if (isIndexOpen && isMiddleOpen && isRingOpen && isPinkyOpen) return '布';
+  if (isIndexOpen && isMiddleOpen && !isRingOpen && !isPinkyOpen) return '剪刀';
+  if (!isIndexOpen && !isMiddleOpen && !isRingOpen && !isPinkyOpen) return '石頭';
+  
+  return '未知';
 }
 
 function windowResized() {
