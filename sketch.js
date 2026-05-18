@@ -115,15 +115,17 @@ function draw() {
     textSize(30);
     text("右手比出「六」(大拇指與小拇指) 結束預測並猜拳", windowWidth / 2, windowHeight * 0.18);
   } else if (gameState === 2) {
-    textSize(40);
-    text(`AI 出: ${aiGesture}  |  你出: ${userRPS || '?'}`, windowWidth / 2, windowHeight * 0.1);
-    textSize(60);
     if (resultText === '你贏了！') fill(50, 255, 50);
     else if (resultText === '你輸了！') fill(255, 50, 50);
     else fill(255, 255, 50);
-    text(resultText, windowWidth / 2, windowHeight * 0.22);
     
+    textSize(100);
+    text(resultText, windowWidth / 2, windowHeight * 0.15);
+
     fill(255);
+    textSize(40);
+    text(`AI 出: ${aiGesture}  |  你出: ${userRPS || '?'}`, windowWidth / 2, windowHeight * 0.28);
+
     textSize(24);
     text("再次用右手連續握拳兩次可重新開始", windowWidth / 2, windowHeight * 0.9);
   }
